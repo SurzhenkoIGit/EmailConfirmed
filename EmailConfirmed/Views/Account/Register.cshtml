@@ -1,0 +1,75 @@
+﻿@model EmailConfirmed.VIewModel.RegisterViewModel
+
+
+<div class="min-h-[calc(100vh-200px)] flex items-center justify-center bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-6">
+        <!-- Заголовок -->
+        <div>
+            <h2 class="mt-2 text-center text-3xl font-extrabold text-gray-900">
+                Регистрация нового пользователя
+            </h2>
+        </div>
+
+        <!-- Форма -->
+        <form class="mt-6 space-y-4" method="post" asp-controller="Account" asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm"></div>
+
+            <div class="rounded-md shadow-sm space-y-6">
+                <!-- Логин -->
+                <div>
+                    <label asp-for="Login" class="block text-sm font-medium text-gray-700">Логин</label>
+                    <input asp-for="Login"
+                           class="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                           placeholder="Введите логин" />
+                    <span asp-validation-for="Login" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label asp-for="Email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input asp-for="Email"
+                           class="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                           placeholder="Введите email" />
+                    <span asp-validation-for="Email" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Номер телефона -->
+                <div>
+                    <label asp-for="PhoneNumber" class="block text-sm font-medium text-gray-700">Номер телефона</label>
+                    <input asp-for="PhoneNumber"
+                           class="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                           placeholder="Введите номер телефона" />
+                    <span asp-validation-for="PhoneNumber" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Пароль -->
+                <div>
+                    <label asp-for="Password" class="block text-sm font-medium text-gray-700">Пароль</label>
+                    <input asp-for="Password"
+                           class="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                           placeholder="Введите пароль" />
+                    <span asp-validation-for="Password" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Подтверждение пароля -->
+                <div>
+                    <label asp-for="PasswordConfirm" class="block text-sm font-medium text-gray-700">Подтверждение пароля</label>
+                    <input asp-for="PasswordConfirm"
+                           class="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                           placeholder="Подтвердите пароль" />
+                    <span asp-validation-for="PasswordConfirm" class="text-red-500 text-xs"></span>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button type="submit"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+                    Регистрация
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

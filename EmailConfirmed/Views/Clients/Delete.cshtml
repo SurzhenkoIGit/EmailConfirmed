@@ -1,0 +1,92 @@
+﻿@model EmailConfirmed.Models.Client.ClientApp
+
+@{
+    ViewData["Title"] = "Delete Client";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <!-- Предупреждение -->
+                <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-2xl font-bold text-red-600 mb-2">⚠️ Вы уверены?</h3>
+                            <p class="text-red-700">
+                                Вы собираетесь безвозвратно удалить учетную запись клиента
+                                <span class="font-semibold">@Model.FullName</span>.
+                                Это действие является необратимым и приведет к удалению всех данных,
+                                связанных с этим клиентом из системы.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-controller="Clients" asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- Информация о клиенте -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <dl class="grid grid-cols-1 gap-4">
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">👤 Полное имя:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.FullName</dd>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">📧 Email:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.Email</dd>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">🎂 День рождения:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.BirthDate.ToShortDateString()</dd>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">📱 Номер телефона:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.PhoneNumber</dd>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">🧾 Кредит:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.Type</dd>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">💸 Сумма кредита:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.LoanAmount руб.</dd>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">🗓️ Срок кредита:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.LoanTerm мес.</dd>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <dt class="text-sm font-medium text-gray-500">💰 Ежемесячный доход:</dt>
+                                <dd class="text-sm font-semibold text-gray-900 col-span-2">@Model.MonthSum руб.</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="flex justify-center space-x-4">
+                        <button type="submit"
+                                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-300">
+                            <i class="fas fa-trash-alt mr-2"></i> Да, удалить
+                        </button>
+                        <a asp-controller="Clients" asp-action="List"
+                           class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

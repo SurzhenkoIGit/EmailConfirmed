@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Игнорировать большой файл модели Llama 3
+EmailConfirmed/Models/ChatBot/suzume-llama-3-8B-multilingual-orpo-borda-top25.Q5_K_M.gguf

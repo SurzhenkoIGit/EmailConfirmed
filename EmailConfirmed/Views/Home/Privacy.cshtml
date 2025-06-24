@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Политика конфиденциальности";
+}
+
+<div class="container mx-auto px-4 py-8 max-w-4xl min-h-[calc(100vh-theme('spacing.32'))]">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Заголовок -->
+        <div class="bg-green-600 text-white p-6 text-center">
+            <h1 class="text-3xl font-bold font-serif">@ViewData["Title"]</h1>
+        </div>
+
+        <!-- Содержимое -->
+        <div class="p-6">
+            <!-- Секции -->
+            <div id="sections" class="space-y-6">
+                <section class="section opacity-100 transform translate-x-0 transition-all duration-300 ease-in-out text-center" data-section="1">
+                    <h2 class="text-2xl font-semibold mb-4 text-green-700 font-serif">1. Общие положения</h2>
+                    <div class="prose mx-auto font-sans">
+                        <p class="text-lg leading-relaxed">
+                            Настоящая политика конфиденциальности описывает, как мы собираем, используем и защищаем вашу личную информацию...
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section hidden transition-all duration-300 ease-in-out transform text-center" data-section="2">
+                    <h2 class="text-2xl font-semibold mb-4 text-green-700 font-serif">2. Сбор информации</h2>
+                    <div class="prose mx-auto font-sans">
+                        <p class="text-lg mb-4 leading-relaxed">Мы собираем следующие типы информации:</p>
+                        <ul class="list-none space-y-2 text-lg">
+                            <li>• Личная информация (имя, email, телефон)</li>
+                            <li>• Технические данные (IP-адрес, cookies)</li>
+                            <li>• Информация об использовании сервиса</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section hidden transition-all duration-300 ease-in-out transform text-center" data-section="3">
+                    <h2 class="text-2xl font-semibold mb-4 text-green-700 font-serif">3. Использование информ��ции</h2>
+                    <div class="prose mx-auto font-sans">
+                        <p class="text-lg mb-4 leading-relaxed">Собранная информация используется для:</p>
+                        <ul class="list-none space-y-2 text-lg">
+                            <li>• Предоставления услуг</li>
+                            <li>• Улучшения сервиса</li>
+                            <li>• Коммуникации с пользователями</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section hidden transition-all duration-300 ease-in-out transform text-center" data-section="4">
+                    <h2 class="text-2xl font-semibold mb-4 text-green-700 font-serif">4. Защита информации</h2>
+                    <div class="prose mx-auto font-sans">
+                        <p class="text-lg mb-4 leading-relaxed">Мы принимаем следующие меры для защиты вашей информации:</p>
+                        <ul class="list-none space-y-2 text-lg">
+                            <li>• Шифрование данных</li>
+                            <li>• Регулярное обновление систем безо��асности</li>
+                            <li>• Ограниченный доступ к личным данным</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Навигация -->
+            <div class="flex justify-between items-center mt-8 border-t pt-6">
+                <button id="prevBtn"
+                        class="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-serif">
+                    <i class="fas fa-chevron-left mr-2"></i>
+                    Назад
+                </button>
+                <span id="pageIndicator" class="text-gray-600 font-serif text-lg">
+                    Страница <span id="currentPage">1</span> из <span id="totalPages">4</span>
+                </span>
+                <button id="nextBtn"
+                        class="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-serif">
+                    Вперед
+                    <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = document.querySelectorAll('.section');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const currentPageSpan = document.getElementById('currentPage');
+            const totalPagesSpan = document.getElementById('totalPages');
+
+            let currentSection = 1;
+            const totalSections = sections.length;
+
+            // Инициализация
+            updateNavigation();
+            showSection(1); // Показываем первую секцию сразу
+
+            // Обработчики кнопок
+            prevBtn.addEventListener('click', () => {
+                if (currentSection > 1) {
+                    showSection(--currentSection);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSection < totalSections) {
+                    showSection(++currentSection);
+                }
+            });
+
+            // Показать секцию
+            function showSection(sectionNumber) {
+                sections.forEach(section => {
+                    section.classList.add('hidden');
+                    section.classList.remove('opacity-100');
+                });
+
+                const currentSectionElement = document.querySelector(`[data-section="${sectionNumber}"]`);
+                currentSectionElement.classList.remove('hidden');
+
+                // Добавляем небольшую задержку для анимации
+                setTimeout(() => {
+                    currentSectionElement.classList.add('opacity-100');
+                }, 10);
+
+                updateNavigation();
+            }
+
+            // Обновить состояние навигации
+            function updateNavigation() {
+                currentPageSpan.textContent = currentSection;
+                totalPagesSpan.textContent = totalSections;
+
+                prevBtn.disabled = currentSection === 1;
+                nextBtn.disabled = currentSection === totalSections;
+            }
+        });
+    </script>
+
+    <style>
+        .section {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+            .section.opacity-100 {
+                opacity: 1;
+            }
+
+        .prose {
+            max-width: 65ch;
+            margin: 0 auto;
+        }
+
+            .prose p {
+                margin-bottom: 1.5em;
+            }
+
+            .prose ul {
+                margin-bottom: 1.5em;
+            }
+    </style>
+}

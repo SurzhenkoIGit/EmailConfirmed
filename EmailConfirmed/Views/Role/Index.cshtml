@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityRole>
+
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8 text-gray-800">Список ролей</h1>
+
+    <div class="mb-8">
+        <a asp-action="Create" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-lg font-medium rounded-md transition-colors duration-300">
+            <i class="fas fa-plus mr-2"></i>
+            Добавить роль
+        </a>
+    </div>
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-green-600">
+                <tr>
+                    <th class="px-8 py-4 text-left text-md font-medium text-white uppercase tracking-wider">🧾 Название</th>
+                    <th class="px-8 py-4 text-left text-md font-medium text-white uppercase tracking-wider">👨🏻‍💼 Пользователи</th>
+                    <th class="px-8 py-4 text-left text-md font-medium text-white uppercase tracking-wider">Действия</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @foreach (var role in Model.ToList())
+                {
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-3 whitespace-nowrap text-lg text-gray-700">@role.Name</td>
+                        <td class="px-6 py-3 whitespace-nowrap text-lg text-gray-700" i-role="@role.Id"></td>
+                        <td class="px-6 py-3 whitespace-nowrap space-x-3">
+                            <a class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-base font-medium rounded-md transition-colors duration-300"
+                               asp-action="Update" asp-route-id="@role.Id">
+                                <i class="fas fa-edit mr-2"></i>
+                                Изменить
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@role.Id" method="post" class="inline">
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-base font-medium rounded-md transition-colors duration-300">
+                                    <i class="fas fa-trash-alt mr-2"></i>
+                                    Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

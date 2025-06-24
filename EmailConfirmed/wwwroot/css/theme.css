@@ -1,0 +1,59 @@
+﻿:root {
+    --bg-gradient: linear-gradient(to bottom right, #f0fdf4, #ecfdf5, #f0fdfa); /* градиент для светлой темы */
+    --bg-primary: #ffffff;
+    --text-primary: #333333;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --header-bg: linear-gradient(to right, #15803d, #166534);
+    --footer-bg: linear-gradient(to right, #15803d, #166534);
+}
+
+.dark {
+    --bg-gradient: linear-gradient(to bottom right, #111827, #1f2937, #111827); /* градиент для темной темы */
+    --bg-primary: #1a1a1a;
+    --text-primary: #ffffff;
+    --card-bg: #2d2d2d;
+    --border-color: #404040;
+    --header-bg: linear-gradient(to right, #064e3b, #022c22);
+    --footer-bg: linear-gradient(to right, #064e3b, #022c22);
+}
+
+/* Применение градиента фона */
+.bg-gradient {
+    background-image: var(--bg-gradient);
+}
+
+/* Остальные стили */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s, background-image 0.3s;
+}
+
+header {
+    background: var(--header-bg);
+}
+
+footer {
+    background: var(--footer-bg);
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+/* Дополнительные стили для темной темы */
+.dark .bg-white {
+    background-color: var(--card-bg);
+}
+
+.dark .text-gray-800 {
+    color: var(--text-primary);
+}
+
+/* Плавные переходы для всех элементов */
+* {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

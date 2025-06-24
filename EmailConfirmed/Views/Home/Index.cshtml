@@ -1,0 +1,235 @@
+﻿@{
+    ViewData["Title"] = "Главная страница";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Погода -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-cloud-sun text-blue-500 mr-2"></i>
+                Погода
+            </h2>
+            <div id="weather" class="space-y-2">
+                <div class="animate-pulse bg-gray-200 h-8 rounded"></div>
+            </div>
+        </div>
+
+        <!-- Новости -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-newspaper text-green-500 mr-2"></i>
+                Последние новости
+            </h2>
+            <div id="news" class="space-y-2">
+                <div class="animate-pulse bg-gray-200 h-20 rounded"></div>
+            </div>
+        </div>
+
+        <!-- Цитата дня -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-quote-left text-purple-500 mr-2"></i>
+                Цитата дня
+            </h2>
+            <div id="quote" class="space-y-2">
+                <div class="animate-pulse bg-gray-200 h-16 rounded"></div>
+            </div>
+        </div>
+
+        <!-- Карта -->
+        <div class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                Карта
+            </h2>
+            <!-- Добавляем дополнительный контейнер для карты -->
+            <div class="relative w-full">
+                <div id="map" class="h-[400px] rounded-lg w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Чат-бот -->
+    <div id="chatbot" class="fixed bottom-4 right-4 z-50">
+        <!-- Кнопка чат-бота -->
+        <button id="chatButton" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 shadow-lg transition-all duration-300 w-14 h-14 flex items-center justify-center">
+            <i class="fas fa-robot text-2xl transition-transform duration-300"></i>
+            <i class="fas fa-times text-2xl absolute transition-transform duration-300 scale-0"></i>
+        </button>
+
+        <!-- Окно чата -->
+        <div id="chatWindow" class="hidden opacity-0 transform translate-y-4 bg-white rounded-lg shadow-xl w-80 md:w-96 absolute bottom-16 right-0 transition-all duration-300">
+            <!-- Заголовок чата -->
+            <div class="bg-blue-500 text-white p-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="font-bold">Чат-помощник</h3>
+                <button id="closeChat" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Темы -->
+            <div class="p-4 border-b">
+                <div id="topicButtons" class="flex flex-wrap gap-2">
+                    <!-- Кнопки тем будут добавлены через JavaScript -->
+                </div>
+            </div>
+
+            <!-- Сообщения -->
+            <div id="chatMessages" class="p-4 h-96 overflow-y-auto space-y-4">
+                <!-- Сообщения будут добавляться здесь -->
+            </div>
+
+            <!-- Ввод сообщения -->
+            <div class="border-t p-4">
+                <div class="flex space-x-2">
+                    <input type="text" id="messageInput"
+                           class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Введите сообщение...">
+                    <button id="sendMessage"
+                            class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-colors duration-300">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/chatbot.js?v=@DateTime.Now.Ticks"></script>
+
+    <!-- Подключение Яндекс Карт -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=f1b8445e-4e5d-4b52-afe2-864df9355222&lang=ru_RU" type="text/javascript"></script>
+
+    <script>
+        // Инициализация карты
+        ymaps.ready(initMap);
+
+        function initMap() {
+            var myMap = new ymaps.Map("map", {
+                center: [56.010569, 92.852572], // Красноярск
+                zoom: 9,
+                controls: ['zoomControl', 'searchControl']
+            });
+
+            // Добавляем элементы управления
+            myMap.controls.add('typeSelector');
+            myMap.controls.add('fullscreenControl');
+        }
+
+        // Загрузка погоды
+        async function loadWeather() {
+            try {
+                const response = await fetch('/api/getweather');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Weather data:', data); // Для отладки
+
+                const weatherDiv = document.getElementById('weather');
+                weatherDiv.innerHTML = `
+                    <div class="flex items-center justify-between p-4">
+                        <div>
+                            <h3 class="text-2xl font-bold">${data.temperature}°C</h3>
+                            <p>Красноярск</p>
+                            <p class="text-sm">${data.description}</p>
+                        </div>
+                        <div class="text-right">
+                            <i class="fas ${getWeatherIcon(data.temperature)} text-3xl text-blue-500"></i>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 p-4 rounded-lg">
+                        <div>
+                            <p>Влажность</p>
+                            <p class="font-semibold">${data.humidity}%</p>
+                        </div>
+                        <div>
+                            <p>Ветер</p>
+                            <p class="font-semibold">${data.windSpeed} м/с</p>
+                        </div>
+                    </div>
+                    <div class="text-right text-xs mt-2 px-4">
+                        Обновлено: ${data.updated}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading weather:', error);
+                document.getElementById('weather').innerHTML = `
+                    <div class="p-4 text-red-500">
+                        <p class="font-semibold">Ошибка загрузки погоды</p>
+                        <p class="text-sm mt-1">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Функция для выбора иконки погоды в зависимости от температуры
+        function getWeatherIcon(temperature) {
+            if (temperature <= 0) return 'fa-snowflake';
+            if (temperature > 25) return 'fa-sun';
+            return 'fa-cloud-sun';
+        }
+
+        // Загрузка новостей
+        async function loadNews() {
+            try {
+                const response = await fetch('/api/getnews');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const news = await response.json();
+
+                const newsDiv = document.getElementById('news');
+                newsDiv.innerHTML = `
+                    <div class="space-y-4">
+                        ${news.map(article => `
+                            <a href="${article.url}" target="_blank" class="block hover:bg-gray-50 p-2 rounded transition-colors duration-200">
+                                <h3 class="font-semibold text-sm">${article.title}</h3>
+                                <p class=" text-xs mt-1">${new Date(article.date).toLocaleString()}</p>
+                            </a>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading news:', error);
+                document.getElementById('news').innerHTML = `
+                    <div class="text-red-500">
+                        <p>Ошибка загрузки новостей</p>
+                        <p class="text-sm">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Загрузка цитаты
+        async function loadQuote() {
+            try {
+                const response = await fetch('/api/getquote');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                const quoteDiv = document.getElementById('quote');
+                quoteDiv.innerHTML = `
+                    <blockquote class="italic">"${data.content}"</blockquote>
+                    <p class="text-right text-sm mt-2">— ${data.author}</p>
+                `;
+            } catch (error) {
+                console.error('Error loading quote:', error);
+                document.getElementById('quote').innerHTML = `
+                    <div class="text-red-500">
+                        <p>Ошибка загрузки цитаты</p>
+                        <p class="text-sm">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Загрузка всех данных при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            loadWeather().catch(console.error);
+            loadNews();
+            loadQuote();
+        });
+    </script>
+}

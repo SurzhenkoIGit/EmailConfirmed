@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="py-1">
+        <a asp-area="" asp-controller="Account" asp-action="UpdateUser" asp-route-name="@User?.Identity?.Name"
+           class="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-300">
+            <i class="fas fa-user-cog mr-2"></i>Настройки аккаунта
+        </a>
+
+        @if(User.HasClaim(c => c.Type == "Admin-Skill"))
+        {
+            <a asp-area="" asp-controller="Clients" asp-action="List"
+               class="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-300">
+                <i class="fas fa-user-cog mr-2"></i>Список клиентов
+            </a>
+        }
+
+        <a asp-area="" asp-controller="Role" asp-action="Index"
+           class="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-300">
+            <i class="fas fa-envelope mr-2"></i>Управление ролями
+        </a>
+
+        <hr class="my-1 border-gray-200">
+
+        <form asp-area="" asp-controller="Account" asp-action="Logout">
+            <button type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-300">
+                <i class="fas fa-sign-out-alt mr-2"></i>Выйти
+            </button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="py-1">
+        <a asp-area="" asp-controller="Account" asp-action="Register"
+           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-300">
+            <i class="fas fa-user-plus mr-2"></i>Регистрация
+        </a>
+
+        <a asp-area="" asp-controller="Account" asp-action="Login"
+           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-300">
+            <i class="fas fa-sign-in-alt mr-2"></i>Войти
+        </a>
+    </div>
+}

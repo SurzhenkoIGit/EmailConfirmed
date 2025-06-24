@@ -1,0 +1,129 @@
+﻿@using System.Security.Principal
+
+<!DOCTYPE html>
+<html class="h-full" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="lightdark" />
+    <title>@ViewData["Title"] - EmailConfirmed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/awesome/css/all.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
+</head>
+<body class="h-full flex flex-col transition-colors duration-300 bg-gradient">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 dark:from-gray-800 dark:to-gray-900 shadow-lg transition-colors duration-300">
+        <nav class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Логотип -->
+                <div class="flex-items-center space-x-2">
+                    <a asp-controller="Home" asp-action="Index" class="flex items-center text-white">
+                        <i class="fas fa-leaf mr-2"></i>
+                        <span class="text-xl font-semibold text-white">Сайт</span>
+                    </a>
+                </div>
+
+                <!-- Навигационные ссылки -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a asp-controller="Home" asp-action="Index"
+                       class="text-white hover:bg-green-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center">
+                        <i class="fas fa-home mr-2"></i>
+                        <span>Главная</span>
+                    </a>
+                    <a asp-controller="Home" asp-action="Privacy"
+                       class="text-white hover:bg-green-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        <span>Политика</span>
+                    </a>
+                </div>
+
+                <!-- Правая часть навигации -->
+                <div class="flex items-center space-x-4">
+                    <!-- Меню пользователя -->
+                    <div class="relative group">
+                        <button class="flex items-center text-white hover:bg-green-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300">
+                            <i class="fas fa-user-circle mr-2"></i>
+                            @if (User?.Identity?.IsAuthenticated == true)
+                            {
+                                <span>@User?.Identity?.Name</span>
+                            }
+                            else
+                            {
+                                <span>Пользователь</span>
+                            }
+                            <i class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                        <!-- Выпадающее меню -->
+                        <div class="absolute right-0 w-48 py-2 mt-2 bg-white rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                            <partial name="_LoginPartial" />
+                        </div>
+                    </div>
+
+                    <!-- Иконка чата -->
+                    <div class="flex items-center">
+                        @if (User?.Identity?.IsAuthenticated == true)
+                        {
+                            <a asp-controller="Chat" asp-action="Index"
+                               class="text-white hover:bg-green-600 p-2 rounded-full transition-all duration-300">
+                                <i class="fas fa-comments"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="https://web.whatsapp.com/"
+                               class="text-white hover:bg-green-600 p-2 rounded-full transition-all duration-300">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        }
+                    </div>
+
+                    <!-- Переключатель темы -->
+                    <button id="themeToggle" class="p-2 rounded-full hover:bg-green-600 transition-all duration-300">
+                        <i class="fas fa-sun text-yellow-400"></i>
+                        <i class="fas fa-moon text-blue-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main role="main" class="flex-1 mb-auto">
+        @RenderBody()
+    </main>
+
+    <!-- Футер -->
+    <footer class="w-full bg-gradient-to-r from-green-700 to-green-900 dark:from-gray-800 dark:to-gray-900 shadow-lg mt-auto transition-colors duration-300">
+        <div class="container mx-auto px-4 py-4">
+            <div class="text-center text-white font-medium transition-all duration-300">
+                <p>&copy; @DateTime.Now.Year - EmailConfirmed - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white font-medium transition-all duration-300">Политика конфиденциальности</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+<style>
+    html, body {
+        min-height: 100vh;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    main {
+        flex: 1 0 auto;
+    }
+
+    footer {
+        flex-shrink: 0;
+    }
+</style>

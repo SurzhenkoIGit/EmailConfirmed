@@ -1,0 +1,102 @@
+﻿@model EmailConfirmed.Models.Client.ClientApp
+ 
+@{
+    ViewData["Title"] = "Success";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Заголовок с анимацией -->
+            <div class="bg-gradient-to-r from-green-500 to-green-600 px-6 py-8 text-center">
+                <div class="animate-bounce mb-4">
+                    <i class="fas fa-check-circle text-white text-5xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Клиент успешно создан!</h2>
+                <p class="text-green-100">Ниже приведены сведения о созданном клиенте</p>
+            </div>
+
+            <!-- Информация о клиенте -->
+            <div class="p-6">
+                <div class="bg-gray-50 rounded-lg shadow-sm">
+                    <dl class="grid grid-cols-1 gap-4 p-6">
+                        <!-- Основная информация -->
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Полное имя -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">👤 Полное имя:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.FullName</dd>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">📧 Email:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">
+                                        <a href="mailto:@Model.Email" class="hover:text-green-600 transition-colors duration-300">
+                                            @Model.Email
+                                        </a>
+                                    </dd>
+                                </div>
+
+                                <!-- День рождения -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">🎂 День рождения:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.BirthDate.ToShortDateString()</dd>
+                                </div>
+
+                                <!-- Пол -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">⚧ Пол:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.Gender</dd>
+                                </div>
+
+                                <!-- Номер телефона -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">📱 Номер телефона:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.PhoneNumber</dd>
+                                </div>
+
+                                <!-- Тип кредита -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">🧾 Тип кредита:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.Type</dd>
+                                </div>
+
+                                <!-- Сумма кредита -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">💸 Сумма кредита:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.LoanAmount руб.</dd>
+                                </div>
+
+                                <!-- Срок кредита -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">🗓️ Срок кредита:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.LoanTerm мес.</dd>
+                                </div>
+
+                                <!-- Ежемесячный доход -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <dt class="text-sm font-medium text-gray-500">💰 Ежемесячный доход:</dt>
+                                    <dd class="mt-1 text-lg font-semibold text-gray-900">@Model.MonthSum руб.</dd>
+                                </div>
+                            </div>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="flex justify-center space-x-4 mt-8">
+                    <a asp-controller="Clients" asp-action="Create"
+                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                        <i class="fas fa-plus-circle mr-2"></i> Создать нового клиента
+                    </a>
+                    <a asp-controller="Clients" asp-action="List"
+                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i> К списку клиентов
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

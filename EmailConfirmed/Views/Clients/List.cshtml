@@ -1,0 +1,260 @@
+﻿@model EmailConfirmed.Models.Client.ClientsViewModel
+
+@{
+    ViewData["Title"] = "Client List";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <!-- Заголовок и кнопка добавления -->
+        <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-users"></i> Список клиентов</h2>
+            <button onclick="loadCreateForm()"
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-300 flex items-center">
+                <i class="fas fa-plus-circle mr-2"></i> Добавить клиента
+            </button>
+        </div>
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+                <p>@TempData["Message"]</p>
+            </div>
+        }
+
+        <!-- Секция фильтров -->
+        <div class="bg-white rounded-lg shadow mb-6">
+            <div class="bg-green-600 text-white px-6 py-3 rounded-t-lg flex justify-between items-center">
+                <h3 class="text-lg font-semibold">🔍 Поиск клиентов</h3>
+                <span class="bg-white text-green-800 px-3 py-1 rounded-full text-sm">
+                    Всего клиентов: @Model.Clients.Count() 📝
+                </span>
+            </div>
+
+            <div class="p-6">
+                <form method="get" asp-controller="Clients" asp-action="List" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label asp-for="SearchTerm" class="block text-sm font-medium text-gray-700 mb-1">🔍 Найти по имени</label>
+                        <input asp-for="SearchTerm" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                               placeholder="Введите имя..." />
+                    </div>
+
+                    <div>
+                        <label asp-for="SelectedClients" class="block text-sm font-medium text-gray-700 mb-1">👔 Тип кредита</label>
+                        <select asp-for="SelectedClients" asp-items="@ViewBag.ClientTypeOptions"
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <option value="">Все типы кредитов</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label asp-for="PageSize" class="block text-sm font-medium text-gray-700 mb-1">📄 Отобразить</label>
+                        <select asp-for="PageSize" asp-items="@ViewBag.PageSizeOptions"
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                onchange="this.form.submit();"></select>
+                    </div>
+
+                    <div class="flex items-end">
+                        <button type="submit"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors duration-300">
+                            Фильтр 🎯
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Таблица клиентов -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-green-600">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">📛 Имя</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">📧 Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">📞 Телефон</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">🧾 Тип кредита</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">⚙️ Действия</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var employee in Model.Clients)
+                    {
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">@employee.FullName</td>
+                            <td class="px-6 py-4 whitespace-nowrap">@employee.Email</td>
+                            <td class="px-6 py-4 whitespace-nowrap">@employee.PhoneNumber</td>
+                            <td class="px-6 py-4 whitespace-nowrap">@employee.Type</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <button onclick="loadDetails(@employee.Id)"
+                                        class="inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md mx-1 transition-colors duration-300">
+                                    <i class="fas fa-eye mr-2"></i> Детали
+                                </button>
+                                <button onclick="loadEditForm(@employee.Id)"
+                                        class="inline-flex items-center px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium rounded-md mx-1 transition-colors duration-300">
+                                    <i class="fas fa-pencil-alt mr-2"></i> Изменить
+                                </button>
+                                <button onclick="loadDeleteForm(@employee.Id)"
+                                        class="inline-flex items-center px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md mx-1 transition-colors duration-300">
+                                    <i class="fas fa-trash-alt mr-2"></i> Удалить
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Пагинация -->
+        <div class="flex justify-center mt-6">
+            <nav class="inline-flex rounded-md shadow">
+                @if (Model.PageNumb == 1)
+                {
+                    <span class="px-3 py-2 bg-gray-200 text-gray-500 rounded-l-md">Первый ⏮️</span>
+                    <span class="px-3 py-2 bg-gray-200 text-gray-500">Предыдущий ⬅️</span>
+                }
+                else
+                {
+                    <a href="@Url.Action("List", "Client", GetRouteValuesForPage(1))"
+                       class="px-3 py-2 bg-white hover:bg-gray-50 text-green-600 rounded-l-md transition-colors duration-300">Первый ⏮️</a>
+                    <a href="@Url.Action("List", "Client", GetRouteValuesForPage(Model.PageNumb - 1))"
+                       class="px-3 py-2 bg-white hover:bg-gray-50 text-green-600 transition-colors duration-300">Предыдущий ⬅️</a>
+                }
+
+                <span class="px-3 py-2 bg-green-600 text-white">@Model.PageNumb</span>
+
+                @if (Model.PageNumb == Model.TotalPages)
+                {
+                    <span class="px-3 py-2 bg-gray-200 text-gray-500">Следующий ➡️</span>
+                    <span class="px-3 py-2 bg-gray-200 text-gray-500 rounded-r-md">Последний ⏭️</span>
+                }
+                else
+                {
+                    <a href="@Url.Action("List", "Client", GetRouteValuesForPage(Model.PageNumb + 1))"
+                       class="px-3 py-2 bg-white hover:bg-gray-50 text-green-600 transition-colors duration-300">Следующий ➡️</a>
+                    <a href="@Url.Action("List", "Client", GetRouteValuesForPage(Model.TotalPages))"
+                       class="px-3 py-2 bg-white hover:bg-gray-50 text-green-600 rounded-r-md transition-colors duration-300">Последний ⏭️</a>
+                }
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Модальные окна -->
+<!-- Модальное окно создания -->
+<div id="createModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-4/5 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center">
+            <h3 class="text-2xl font-bold">Создание нового клиента</h3>
+            <button onclick="closeModal('createModal')" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div id="createModalContent" class="mt-4">
+            <!-- Содержимое будет загружено через AJAX -->
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования -->
+<div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-4/5 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center">
+            <h3 class="text-2xl font-bold">Редактирование клиента</h3>
+            <button onclick="closeModal('editModal')" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div id="editModalContent" class="mt-4">
+            <!-- Содержимое будет загружено через AJAX -->
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно удаления -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-2/5 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center">
+            <h3 class="text-2xl font-bold">Удаление клиента</h3>
+            <button onclick="closeModal('deleteModal')" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div id="deleteModalContent" class="mt-4">
+            <!-- Содержимое будет загружено через AJAX -->
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно деталей -->
+<div id="detailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-4/5 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center">
+            <h3 class="text-2xl font-bold">Детали клиента</h3>
+            <button onclick="closeModal('detailsModal')" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div id="detailsModalContent" class="mt-4">
+            <!-- Содержимое будет загружено через AJAX -->
+        </div>
+    </div>
+</div>
+
+<script>
+function openModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+function loadCreateForm() {
+    openModal('createModal');
+    fetch('@Url.Action("Create", "Clients")')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('createModalContent').innerHTML = html;
+        });
+}
+
+function loadEditForm(id) {
+    openModal('editModal');
+    fetch(`@Url.Action("Update", "Clients")/${id}`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('editModalContent').innerHTML = html;
+        });
+}
+
+function loadDeleteForm(id) {
+    openModal('deleteModal');
+    fetch(`@Url.Action("Delete", "Clients")/${id}`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('deleteModalContent').innerHTML = html;
+        });
+}
+
+function loadDetails(id) {
+    openModal('detailsModal');
+    fetch(`@Url.Action("Details", "Clients")/${id}`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('detailsModalContent').innerHTML = html;
+        });
+}
+</script>
+
+@functions {
+    private object GetRouteValuesForPage(int pageNumber)
+    {
+        return new
+        {
+            SearchTerm = Model.SearchTerm,
+            SelectedType = Model.SelectedClients,
+            PageSize = Model.PageSize,
+            PageNumber = pageNumber
+        };
+    }
+}

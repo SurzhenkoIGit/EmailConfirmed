@@ -1,0 +1,167 @@
+﻿@using EmailConfirmed.Models.Client
+@model EmailConfirmed.Models.Client.ClientApp
+
+@{
+    ViewData["Title"] = "Create New Client";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                    <i class="fas fa-user-plus"></i> Добавить нового клиента
+                </h2>
+
+                <form asp-controller="Clients" asp-action="Create" method="post" class="space-y-6">
+                    <!-- Полное имя -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="FullName" class="text-sm font-medium text-gray-700 md:text-right">
+                            👤 Полное имя:
+                        </label>
+                        <div class="md:col-span-2">
+                            <input asp-for="FullName"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                   placeholder="Введите полное имя" />
+                            <span asp-validation-for="FullName" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="Email" class="text-sm font-medium text-gray-700 md:text-right">
+                            📧 Email:
+                        </label>
+                        <div class="md:col-span-2">
+                            <input asp-for="Email"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                   placeholder="Введите Email адрес" />
+                            <span asp-validation-for="Email" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Дата рождения -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="BirthDate" class="text-sm font-medium text-gray-700 md:text-right">
+                            🎂 День рождения:
+                        </label>
+                        <div class="md:col-span-2">
+                            <input asp-for="BirthDate" type="date"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" />
+                            <span asp-validation-for="BirthDate" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Пол -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label class="text-sm font-medium text-gray-700 md:text-right">
+                            ⚧ Пол:
+                        </label>
+                        <div class="md:col-span-2 flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input asp-for="Gender" type="radio" value="Муж"
+                                       class="form-radio text-green-600 focus:ring-green-500" />
+                                <span class="ml-2">Муж</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input asp-for="Gender" type="radio" value="Жен"
+                                       class="form-radio text-green-600 focus:ring-green-500" />
+                                <span class="ml-2">Жен</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input asp-for="Gender" type="radio" value="Другое"
+                                       class="form-radio text-green-600 focus:ring-green-500" />
+                                <span class="ml-2">Другое</span>
+                            </label>
+                            <span asp-validation-for="Gender" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Номер телефона -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="PhoneNumber" class="text-sm font-medium text-gray-700 md:text-right">
+                            📱 Номер телефона:
+                        </label>
+                        <div class="md:col-span-2">
+                            <input asp-for="PhoneNumber"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                   placeholder="Введите номер телефона" />
+                            <span asp-validation-for="PhoneNumber" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Тип кредита -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="Type" class="text-sm font-medium text-gray-700 md:text-right">
+                            🏢 Тип кредита:
+                        </label>
+                        <div class="md:col-span-2">
+                            <select asp-for="Type" asp-items="Html.GetEnumSelectList<ClientType>()"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                <option selected="selected" value="">Выберите кредит</option>
+                            </select>
+                            <span asp-validation-for="Type" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Сумма кредита -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="LoanAmount" class="text-sm font-medium text-gray-700 md:text-right">
+                            💰 Сумма кредита:
+                        </label>
+                        <div class="md:col-span-2">
+                            <input asp-for="LoanAmount"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                   placeholder="Введите сумму кредита" />
+                            <span asp-validation-for="LoanAmount" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Срок кредита -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="LoanTerm" class="text-sm font-medium text-gray-700 md:text-right">
+                            ⏳ Срок кредита:
+                        </label>
+                        <div class="md:col-span-2">
+                            <input asp-for="LoanTerm"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                   placeholder="Введите срок кредита" />
+                            <span asp-validation-for="LoanTerm" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Ежемесячный доход -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        <label asp-for="MonthSum" class="text-sm font-medium text-gray-700 md:text-right">
+                            💰 Ежемесячный доход:
+                        </label>
+                        <div class="md:col-span-2">
+                            <input asp-for="MonthSum"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                   placeholder="Введите размер дохода" />
+                            <span asp-validation-for="MonthSum" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="flex justify-center space-x-4 pt-6">
+                        <button type="submit"
+                                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                            <i class="fas fa-save mr-2"></i> Создать клиента
+                        </button>
+                        <a asp-controller="Clients" asp-action="List"
+                           class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Вернуться к списку
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
