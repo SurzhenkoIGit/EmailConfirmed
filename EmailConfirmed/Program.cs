@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using EmailConfirmed.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using LLama;
 using EmailConfirmed.Models.ChatBot;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -6,7 +6,6 @@ using Newtonsoft.Json.Serialization;
 using System.Net.Http.Headers;
 using System.Text;
 using EmailConfirmed.Data;
-using LLama;
 
 namespace EmailConfirmed.Controllers
 {
@@ -43,6 +42,12 @@ namespace EmailConfirmed.Controllers
             _thanks = responses.Responses.Thanks;
         }
 
+        // Модель для приёма запроса от фронтенда
+        public class SendMessageRequest
+        {
+            public string message { get; set; }
+        }
+
         private async Task<string> GetBotResponse(string message)
         {
             message = message.ToLower().Trim();
@@ -60,12 +65,7 @@ namespace EmailConfirmed.Controllers
                 return response;
             try
             {
-                var botResponse = new StringBuilder();
-                foreach(var output in await _service.GetResponseAsync(message))
-                {
-                    botResponse.Append(output);
-                }
-                return botResponse.ToString().Trim();
+                return await _service.GetResponseAsync(message);
             }
             catch
             {
@@ -83,23 +83,15 @@ namespace EmailConfirmed.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage([FromBody] ChatbotModel request)
+        public async Task<IActionResult> SendMessage([FromBody] SendMessageRequest request)
         {
-            if(string.IsNullOrEmpty(request?.Message) || request.Message.Length > 1000)
+            if (request == null || string.IsNullOrWhiteSpace(request.message))
             {
-                return BadRequest(new { error = "Invalid message" });
+                return BadRequest("Сообщение не может быть пустым.");
             }
-
-            try
-            {
-                string response = await GetBotResponse(request.Message);
-                return Json(new { response });
-            }
-            catch (Exception ex)
-            {
-                
-                return BadRequest(new { error = ex.Message });
-            }
+            // Вызываем наш главный метод-диспетчер
+            var response = await GetBotResponse(request.message);
+            return Json(new { response });
         }
 
     }

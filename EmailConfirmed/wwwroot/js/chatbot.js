@@ -163,20 +163,16 @@ async function sendMessage(event) {
             const response = await fetch('/Chatbot/SendMessage', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ message: message })
             });
 
-            if (!response.ok) {
-                throw new Error('Ошибка сети');
-            }
-
-            const data = await response.json();
+            const result = await response.json();
             
             // Добавляем ответ бота с небольшой задержкой
             setTimeout(() => {
-                appendMessage(data.response, 'bot');
+                appendMessage(result.response, 'bot');
             }, 500);
 
         } catch (error) {
@@ -308,7 +304,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return `bg-gray-100 hover:bg-gray-200 text-gray-700 ${baseClass}`;
         }
     }
-    let conversationHistory = [];
 
     // Показать/скрыть окно чата
     chatButton.addEventListener('click', () => {
@@ -388,32 +383,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const response = await fetch('/Chatbot/SendMessage', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        message: message,
-                        conversationHistory: conversationHistory
-                    })
+                    body: JSON.stringify({ message: message })
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
+                const result = await response.json();
                 removeLlamaGenerating();
 
-                // Добавляем сообщения в историю
-                conversationHistory.push({ role: 'user', content: message });
-                conversationHistory.push({ role: 'assistant', content: data.response });
-
-                // Ограничиваем историю последними 10 сообщениями
-                if (conversationHistory.length > 20) {
-                    conversationHistory = conversationHistory.slice(-20);
-                }
-
-                addMessage('bot', data.response, true);
+                addMessage('bot', result.response, true);
             } catch (error) {
                 console.error('Error:', error);
                 removeLlamaGenerating();
