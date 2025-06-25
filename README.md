@@ -51,7 +51,7 @@
 2.  **Настройте базу данных:**
     *   Строка подключения по умолчанию находится в `EmailConfirmed/Program.cs` и использует SQL Server LocalDB:
         ```csharp
-        string conStr = "Server=(localdb)\\mssqllocaldb;Database=usersdb46;Trusted_Connection=True;MultipleActiveResultSets=true";
+        string conStr = "Server=(localdb)\\mssqllocaldb;Database=ваше_название_БД;Trusted_Connection=True;MultipleActiveResultSets=true";
         ```
     *   Убедитесь, что у вас установлен SQL Server LocalDB, или измените строку подключения на свою в `appsettings.json`.
     *   Примените миграции для создания схемы базы данных:
